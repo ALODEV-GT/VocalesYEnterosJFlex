@@ -10,4 +10,30 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+    
+    <build>
+        <plugins>
+            <!--Complemento para usar jflex -->
+            <plugin>
+                <groupId>de.jflex</groupId>
+                <artifactId>jflex-maven-plugin</artifactId>
+                <version>1.8.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <!--Direccion donde se generara el analizador lexico .java -->
+                            <outputDirectory>src/main/java/</outputDirectory>
+                            <!--Archivos .jflex parar generar el analizador lexico-->
+                            <lexDefinitions>
+                                <lexDefinition>src/main/jflex/analizadorLexico.jflex</lexDefinition>
+                            </lexDefinitions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
