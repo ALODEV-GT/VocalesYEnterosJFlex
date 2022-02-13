@@ -1,5 +1,12 @@
 package com.midik.vocalesyenterosjflex.frontend;
 
+import com.midik.vocalesyenterosjflex.jflex.AnalizadorLexico;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class VentanaPrincipal extends javax.swing.JFrame {
 
     public VentanaPrincipal() {
@@ -23,6 +30,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnAnalizar.setText("Analizar");
+        btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnalizarActionPerformed(evt);
+            }
+        });
 
         btnLimpiar.setText("Limpiar");
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
@@ -83,9 +95,29 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        this.taEntrada.setText(null);
-        this.taSalida.setText(null);
+        limpiarEntrada();
+        limpiarSalida();
     }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
+        limpiarSalida();
+        Reader reader = new StringReader(taEntrada.getText());
+        AnalizadorLexico analizador = new AnalizadorLexico(reader, taSalida);
+        try {
+            analizador.yylex();
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnAnalizarActionPerformed
+
+    private void limpiarEntrada() {
+        this.taEntrada.setText(null);
+    }
+
+    private void limpiarSalida() {
+        this.taSalida.setText(null);
+    }
 
     /**
      * @param args the command line arguments
