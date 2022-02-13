@@ -1,11 +1,11 @@
 package com.midik.vocalesyenterosjflex.frontend;
 
+import com.midik.vocalesyenterosjflex.backend.ContadorVocales;
+import com.midik.vocalesyenterosjflex.backend.Token;
 import com.midik.vocalesyenterosjflex.jflex.AnalizadorLexico;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class VentanaPrincipal extends javax.swing.JFrame {
 
@@ -102,13 +102,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         limpiarSalida();
         Reader reader = new StringReader(taEntrada.getText());
-        AnalizadorLexico analizador = new AnalizadorLexico(reader, taSalida);
+        AnalizadorLexico analizador = new AnalizadorLexico(reader);
+        ContadorVocales contador = new ContadorVocales(taSalida);
+        String posicionNumeros = "";
         try {
-            analizador.yylex();
-        } catch (IOException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            Token token = analizador.yylex();
+            while (token != null) {
+                if (token.getTipoToken().equals("ENTERO")) {
+                    posicionNumeros+=token.toString();
+                } else if (token.getTipoToken().equals("PALABRA")) {
+                    contador.evaluarPalabra(token.getLexema());
+                }
+                token = analizador.yylex();
+            }
+            contador.imprimirContadores();
+            taSalida.append(posicionNumeros);
+        } catch (IOException e) {
+            System.err.println("Ocurrio un error");
         }
-
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void limpiarEntrada() {
